@@ -48,6 +48,8 @@ ENV LC_ALL id_ID.UTF-8
 ENV LC_TIME id_ID.UTF-8
 ENV LC_CTYPE id_ID.UTF-8
 
+RUN echo "intl.default_locale = id_ID;" > /usr/local/etc/php/conf.d/php.ini
+
 #Install Nginx
 
 ENV NGINX_VERSION 1.13.1
