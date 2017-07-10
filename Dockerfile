@@ -270,8 +270,8 @@ RUN apk add --no-cache \
     sha512sum -c /opt/glibc-i18n-${GLIBC_VERSN}.apk.sha512 && \
     apk add --no-cache /opt/glibc-bin-${GLIBC_VERSN}.apk /opt/glibc-i18n-${GLIBC_VERSN}.apk && \
     rm -rf /tmp/* /var/cache/apk/* /opt/glibc*  && \
-    /usr/glibc-compat/bin/localedef -i en_US -f UTF-8 en_US.UTF-8 && \
-    echo "export LANG=en_US.UTF-8" > /etc/profile.d/locale.sh && \
+    /usr/glibc-compat/bin/localedef -i id_ID -f UTF-8 id_ID.UTF-8 && \
+    echo "export LANG=id_ID.UTF-8" > /etc/profile.d/locale.sh && \
     /usr/glibc-compat/sbin/ldconfig /lib /usr/glibc-compat/lib
 
 
