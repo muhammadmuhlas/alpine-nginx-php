@@ -276,6 +276,9 @@ RUN apk add --no-cache \
 
 
 ENV LANG id_ID.UTF-8
+ENV LC_ALL id_ID.UTF-8
+ENV LC_TIME id_ID.UTF-8
+ENV LC_CTYPE id_ID.UTF-8
 
 
 VOLUME /var/www/html
