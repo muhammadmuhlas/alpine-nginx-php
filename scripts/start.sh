@@ -60,10 +60,10 @@ if [ ! -d "/var/www/html/.git" ]; then
  fi
 fi
 
-# Try auto install for composer
-if [ -f "/var/www/html/composer.lock" ]; then
-  composer install --no-dev --working-dir=/var/www/html
-fi
+# # Try auto install for composer
+# if [ -f "/var/www/html/composer.lock" ]; then
+#   composer install --no-dev --working-dir=/var/www/html
+# fi
 
 # Enable custom nginx config files if they exist
 if [ -f /var/www/html/conf/nginx/nginx-site.conf ]; then
