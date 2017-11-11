@@ -223,6 +223,29 @@ RUN echo @testing http://nl.alpinelinux.org/alpine/edge/testing >> /etc/apk/repo
     apk del gcc musl-dev linux-headers libffi-dev augeas-dev python-dev
 #    ln -s /usr/bin/php7 /usr/bin/php
 
+RUN apk add --update \
+        autoconf \
+        file \
+        g++ \
+        gcc \
+        libc-dev \
+        make \
+        pkgconf \
+        re2c \
+        zlib-dev \
+        libmemcached-dev && \
+    cd /tmp && \
+    wget https://github.com/php-memcached-dev/php-memcached/archive/php7.zip && \
+    unzip php7.zip && \
+    cd php-memcached-php7 && \
+    phpize7 || return 1 && \
+    ./configure --prefix=/usr --disable-memcached-sasl --with-php-config=php-config7 || return 1 && \
+    make || return 1 && \
+    make INSTALL_ROOT="" install || return 1 && \
+    install -d "/etc/php7/conf.d" || return 1 && \
+    echo "extension=memcached.so" > /etc/php7/conf.d/20_memcached.ini && \
+    cd /tmp && rm -rf php-memcached-php7 && rm php7.zip
+
 ADD conf/supervisord.conf /etc/supervisord.conf
 
 # Copy our nginx config
