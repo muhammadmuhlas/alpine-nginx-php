@@ -223,29 +223,27 @@ RUN echo @testing http://nl.alpinelinux.org/alpine/edge/testing >> /etc/apk/repo
     apk del gcc musl-dev linux-headers libffi-dev augeas-dev python-dev
 #    ln -s /usr/bin/php7 /usr/bin/php
 
-RUN apk add --update \
-        autoconf \
-        file \
-        g++ \
-        gcc \
-        libc-dev \
-        make \
-        pkgconf \
-        re2c \
-        zlib-dev \
-        libmemcached-dev && \
-    cd /tmp && \
-    wget https://github.com/php-memcached-dev/php-memcached/archive/php7.zip && \
-    unzip php7.zip && \
+RUN echo '@community http://nl.alpinelinux.org/alpine/edge/community' >> /etc/apk/repositories && \
+    apk update && \
+  # Add packages and build dependencies
+    apk add --no-cache tar sed grep curl wget gzip pcre ca-certificates \
+                       build-base zlib-dev autoconf libmemcached-dev \
+                       php7@community php7-dev@community php7-session@community && \
+  # Fetch the php7-memcached source and build/install/cleanup
+    curl -o php7-memcached.tar.gz -SL https://github.com/php-memcached-dev/php-memcached/archive/php7.tar.gz && \
+    tar -xzf php7-memcached.tar.gz && \
     cd php-memcached-php7 && \
-    phpize7 || return 1 && \
-    ./configure --prefix=/usr --disable-memcached-sasl --with-php-config=php-config7 || return 1 && \
-    make || return 1 && \
-    make INSTALL_ROOT="" install || return 1 && \
-    install -d "/etc/php7/conf.d" || return 1 && \
+    phpize7 && \
+    ./configure --prefix=/usr --disable-memcached-sasl --with-php-config=php-config7 && \
+    make && \
+    make install && \
+    install -d /etc/php7/conf.d && \
     echo "extension=memcached.so" > /etc/php7/conf.d/20_memcached.ini && \
-    cd /tmp && rm -rf php-memcached-php7 && rm php7.zip
-
+    cd .. && \
+    rm -rf php7-memcached.tar.gz && \
+    rm -rf php-memcached-php7 && \
+  # prune the build deps for php7-memcached.
+    apk del build-base zlib-dev autoconf libmemcached-dev php7-dev
 ADD conf/supervisord.conf /etc/supervisord.conf
 
 # Copy our nginx config
